@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "cf0b5a2b-a628-4f48-a795-e3730d7d798b"
+      }
+    },
+    "android": {
+      "package": "variete.staff"
+    }
+  }
+}
