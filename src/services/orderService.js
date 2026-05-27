@@ -3,24 +3,53 @@ import { collection, doc, setDoc, onSnapshot, serverTimestamp } from "firebase/f
 
 const ORDERS_COLLECTION = "orders";
 
-// 1. Función que genera un número aleatorio de 6 dígitos (ej. "482910")
-const generarIdCorto = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+// 1. Generador para Barra (Empieza del 1 al 6)
+const generarIdBarra = () => {
+  const primero = Math.floor(Math.random() * 6) + 1; // 1 a 6
+  const resto = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+  return `${primero}${resto}`;
+};
+
+// 2. Generador para Entradas (Empieza del 7 al 9)
+const generarIdEntrada = () => {
+  const primero = Math.floor(Math.random() * 3) + 7; // 7 a 9
+  const resto = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+  return `${primero}${resto}`;
 };
 
 export const createPendingOrder = async (items, total) => {
   try {
-    // 2. Usamos nuestro ID de 6 números
-    const orderId = generarIdCorto(); 
+    // El ID principal de la orden será el de la barra
+    const orderId = generarIdBarra(); 
     
-    // 3. setDoc nos permite decirle a Firebase qué ID exacto queremos usar
+    // Procesamos los items para inyectarle un ID único de 6 números a cada entrada
+    const itemsProcesados = items.map(item => {
+      if (item.id.startsWith('ent')) {
+        const asistentes = item.asistentes || ['Entrada General'];
+        // Reemplazamos la lista de nombres por una lista de objetos { nombre, ticketId }
+        const asistentesData = asistentes.map(nombre => ({
+          nombre,
+          ticketId: generarIdEntrada()
+        }));
+        return { ...item, asistentesData };
+      }
+      return item;
+    });
+
     const docRef = doc(db, ORDERS_COLLECTION, orderId);
     
+    // Guardamos un array plano con todos los IDs de entradas para que la app del staff los encuentre rápido
+    const entradasIds = itemsProcesados
+      .filter(i => i.id.startsWith('ent'))
+      .flatMap(i => i.asistentesData.map(a => a.ticketId));
+
     const newOrder = {
-      items,
+      items: itemsProcesados,
       total,
       status: "pendiente",
       createdAt: serverTimestamp(),
+      entradasIds, // <-- Array con los códigos de 6 números de las entradas
+      barraEntregada: false
     };
 
     await setDoc(docRef, newOrder);
