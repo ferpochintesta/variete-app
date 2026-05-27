@@ -21,9 +21,9 @@ export default async function handler(req, res) {
         })),
         // Las back_urls deben estar estrictamente aquí adentro del body
         back_urls: {
-          success: 'https://variete-app.vercel.app/success',
-          failure: 'https://variete-app.vercel.app/',
-          pending: 'https://variete-app.vercel.app/'
+          success: 'https://variete.vercel.app/success',
+          failure: 'https://variete.vercel.app/',
+          pending: 'https://variete.vercel.app/'
         },
         auto_return: 'approved',
         external_reference: orderId,
