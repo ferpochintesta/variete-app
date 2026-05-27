@@ -75,7 +75,7 @@ export default function Success() {
         
         docPDF.setTextColor(170, 170, 170);
         docPDF.setFontSize(9);
-        docPDF.text(`Código Ticket: ${orderId}-T${ticketGlobalIndex}`, 10, 64);
+        docPDF.text(`Código Ticket: ${orderId}`, 10, 64);
         docPDF.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 70);
         
         docPDF.setDrawColor(68, 68, 68);
@@ -111,6 +111,7 @@ export default function Success() {
       
       docPDF.setTextColor(255, 255, 255);
       docPDF.setFontSize(10);
+      docPDF.text(`Código Ticket: ${orderId}`, 10, 64);
       docPDF.text(`Fecha: ${new Date().toLocaleDateString()}`, 10, 35);
       
       docPDF.setDrawColor(68, 68, 68);
@@ -169,6 +170,8 @@ export default function Success() {
               <h3 style={{ color: '#deff9a', marginTop: 0 }}>🎟️ Entrada para: {asistente}</h3>
               <p style={{ fontSize: '14px', color: '#aaa' }}>{item.name} • Código individual</p>
               
+              <h1 style={{ fontSize: '45px', letterSpacing: '4px', margin: '10px 0' }}>{`${orderId}-T${currentCount}`}</h1>
+
               <div style={qrContainerStyle}>
                 {/* Genera un QR único agregando "-T" y el número de ticket */}
                 <QRCodeCanvas id={`qr-ticket-${currentCount}`} value={`${orderId}-T${currentCount}`} size={160} />
@@ -184,6 +187,8 @@ export default function Success() {
           <h3 style={{ color: '#deff9a', marginTop: 0 }}>🍹 Consumiciones</h3>
           <p style={{ fontSize: '14px', color: '#aaa' }}>Retirá presentando este código en la barra</p>
           
+          <h1 style={{ fontSize: '45px', letterSpacing: '6px', margin: '10px 0' }}>{orderId}</h1>
+
           <div style={{ textAlign: 'left', margin: '15px 0', background: '#000', padding: '10px', borderRadius: '6px' }}>
             {consumicionesCompradas.map((item, i) => (
               <div key={i} style={{ fontSize: '15px', padding: '4px 0' }}>
